@@ -8,5 +8,14 @@
     </head>
     <body>
         <h1>Django To-Do!</h1>
+        {% for note in notes%}
+        <div>
+            <hr>
+            <h3>{{note.user}} - {{note.title}}</h3>
+            <br>
+            <p>{{note.description}}</p> 
+            <hr>
+        </div>
+        {% endfor %}
     </body>
 </html>

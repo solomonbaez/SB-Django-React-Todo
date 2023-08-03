@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import Note
 
 
 def healthCheck(request):
@@ -6,7 +7,9 @@ def healthCheck(request):
 
 
 def homeView(request):
-    return render(request, "base/home.html")
+    notes = Note.objects.all()
+    context = {"notes": notes}
+    return render(request, "base/home.html", context)
 
 
 def loginView(request):
