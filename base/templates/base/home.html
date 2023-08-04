@@ -7,6 +7,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
+        {% if request.user.is_authenticated %}
+            <h2>Hi {{request.user.username}}</h2>
+            <a href="{% url 'user-login' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'user-login'%}">Login</a>
+        {% endif %}
+        
         <h1>Django To-Do!</h1>
         {% for note in notes%}
         <div>
