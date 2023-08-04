@@ -8,7 +8,7 @@ def healthCheck(request):
 
 
 def homeView(request):
-    notes = Note.objects.all()
+    notes = Note.objects.filter(pk=request.user.id)
     context = {"notes": notes}
     return render(request, "base/home.html", context)
 
