@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .models import Note, User
+from .forms import noteForm
 
 
 def healthCheck(request):
@@ -8,7 +9,7 @@ def healthCheck(request):
 
 
 def homeView(request):
-    notes = Note.objects.filter(pk=request.user.id)
+    notes = Note.objects.filter(user=request.user)
     context = {"notes": notes}
     return render(request, "base/home.html", context)
 
@@ -32,3 +33,18 @@ def loginView(request):
 
 def logoutView(request):
     return render(request, "base/home.html")
+
+
+def createNote(request):
+    form = noteForm()
+
+    if request.method == "POST":
+        Note.objects.create(
+            user=request.user,
+            title=request.POST.get("title"),
+            description=request.POST.get("description"),
+        )
+
+        return redirect("home")
+
+    return render(request, "base/create-note.html", {"form": form})
