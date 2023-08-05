@@ -54,3 +54,17 @@ def createNote(request):
         return redirect("home")
 
     return render(request, "base/create-note.html", {"form": form})
+
+
+def updateNote(request, pk):
+    form = noteForm()
+    note = Note.objects.get(id=pk)
+
+    if request.method == "POST":
+        note.title = request.POST.get("title")
+        note.description = request.POST.get("description")
+        note.save()
+
+        return redirect("home")
+
+    return render(request, "base/create-note.html", {"form": form, "note": note})

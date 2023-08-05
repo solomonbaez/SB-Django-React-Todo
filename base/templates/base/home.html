@@ -26,6 +26,7 @@
                 <input type="hidden" name="id" value="{{note.id}}">
                 <input type="submit" value="Delete"/>
             </form>
+            <a href="{% url 'update-note' note.id %}">Update</a>
             <hr>
         </div>
         {% endfor %}
