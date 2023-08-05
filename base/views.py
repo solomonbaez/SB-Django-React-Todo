@@ -64,8 +64,8 @@ def createNote(request):
 
 
 def updateNote(request, pk):
-    form = noteForm()
     note = Note.objects.get(id=pk)
+    form = noteForm(instance=note)
 
     if request.method == "POST":
         note.title = request.POST.get("title")
