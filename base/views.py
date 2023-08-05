@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .models import Note, User
 from .forms import noteForm
 
@@ -9,7 +9,11 @@ def healthCheck(request):
 
 
 def homeView(request):
-    notes = Note.objects.filter(user=request.user)
+    try:
+        notes = Note.objects.filter(user=request.user)
+    except:
+        notes = []
+
     context = {"notes": notes}
 
     if request.method == "POST":
@@ -38,7 +42,9 @@ def loginView(request):
 
 
 def logoutView(request):
-    return render(request, "base/home.html")
+    logout(request)
+
+    return redirect("home")
 
 
 def createNote(request):
@@ -53,7 +59,8 @@ def createNote(request):
 
         return redirect("home")
 
-    return render(request, "base/create-note.html", {"form": form})
+    context = {"form": form, "new_or_update": "new"}
+    return render(request, "base/create-note.html", context)
 
 
 def updateNote(request, pk):
@@ -67,4 +74,5 @@ def updateNote(request, pk):
 
         return redirect("home")
 
-    return render(request, "base/create-note.html", {"form": form, "note": note})
+    context = {"form": form, "note": note, "new_or_update": "new"}
+    return render(request, "base/create-note.html", context)
