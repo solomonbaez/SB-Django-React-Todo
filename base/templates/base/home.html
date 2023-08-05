@@ -21,6 +21,11 @@
             <h3>{{note.user}} - {{note.title}}</h3>
             <br>
             <p>{{note.description}}</p> 
+            <form method="POST" name="{{note.id}}" action="">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{note.id}}">
+                <input type="submit" value="Delete"/>
+            </form>
             <hr>
         </div>
         {% endfor %}

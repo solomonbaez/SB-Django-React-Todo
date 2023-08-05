@@ -11,6 +11,12 @@ def healthCheck(request):
 def homeView(request):
     notes = Note.objects.filter(user=request.user)
     context = {"notes": notes}
+
+    if request.method == "POST":
+        note = Note.objects.get(id=request.POST.get("id"))
+        note.delete()
+        return redirect("home")
+
     return render(request, "base/home.html", context)
 
 
