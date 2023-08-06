@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view
@@ -10,6 +11,7 @@ from .forms import noteForm
 @api_view(["GET"])
 def apiOverview(request):
     api_urls = {
+        "health-check": "/health-check/",
         "home": "",
         "create-note": "/create-note/",
         "update-note": "/update-note/<str:pk>",
@@ -20,7 +22,7 @@ def apiOverview(request):
 
 @api_view(["GET"])
 def healthCheck(request):
-    return render(request, "base/health-check.html")
+    return Response(HttpResponse.status_code)
 
 
 @api_view(["GET", "POST"])
