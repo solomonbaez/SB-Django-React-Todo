@@ -1,14 +1,29 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from .models import Note, User
 from .forms import noteForm
 
 
+@api_view(["GET"])
+def apiOverview(request):
+    api_urls = {
+        "home": "",
+        "create-note": "/create-note/",
+        "update-note": "/update-note/<str:pk>",
+    }
+
+    return Response(api_urls)
+
+
+@api_view(["GET"])
 def healthCheck(request):
     return render(request, "base/health-check.html")
 
 
+@api_view(["GET", "POST"])
 def homeView(request):
     try:
         notes = Note.objects.filter(user=request.user)
