@@ -6,13 +6,14 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Note, User
 from .forms import noteForm
+from .serializers import noteSerializer
 
 
 @api_view(["GET"])
 def apiOverview(request):
     api_urls = {
         "health-check": "/health-check/",
-        "home": "",
+        "notes": "/notes/",
         "create-note": "/create-note/",
         "update-note": "/update-note/<str:pk>",
     }
@@ -25,7 +26,14 @@ def healthCheck(request):
     return Response(HttpResponse.status_code)
 
 
-@api_view(["GET", "POST"])
+@api_view(["GET"])
+def notesView(request):
+    notes = Note.objects.all()
+    serialized_notes = noteSerializer(notes, many=True)
+
+    return Response(serialized_notes.data)
+
+
 def homeView(request):
     try:
         notes = Note.objects.filter(user=request.user)
