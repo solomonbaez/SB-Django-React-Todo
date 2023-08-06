@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import Note, User
 from .forms import noteForm
@@ -12,13 +13,19 @@ def homeView(request):
     try:
         notes = Note.objects.filter(user=request.user)
     except:
+        messages.add_message(request, messages.INFO, "Please log in!")
         notes = []
 
     context = {"notes": notes}
 
     if request.method == "POST":
         note = Note.objects.get(id=request.POST.get("id"))
+        title = note.title
         note.delete()
+
+        messages.add_message(
+            request, messages.INFO, (title + " " + "has been deleted.")
+        )
         return redirect("home")
 
     return render(request, "base/home.html", context)
@@ -72,6 +79,9 @@ def updateNote(request, pk):
         note.description = request.POST.get("description")
         note.save()
 
+        messages.add_message(
+            request, messages.INFO, (note.title + " " + "has been updated.")
+        )
         return redirect("home")
 
     context = {"form": form, "note": note, "new_or_update": "new"}
