@@ -34,6 +34,14 @@ def notesView(request):
     return Response(serialized_notes.data)
 
 
+@api_view(["GET"])
+def notesDetailView(request, pk):
+    note = Note.objects.get(id=pk)
+    serialized_note = noteSerializer(note, many=False)
+
+    return Response(serialized_note.data)
+
+
 def homeView(request):
     try:
         notes = Note.objects.filter(user=request.user)
