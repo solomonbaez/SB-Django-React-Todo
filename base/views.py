@@ -53,6 +53,25 @@ def apiCreateNote(request):
     return Response(serializer.data)
 
 
+@api_view(["POST"])
+def apiUpdateNote(request, pk):
+    note = Note.objects.get(id=pk)
+    serializer = noteSerializer(instance=note, data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+
+    return Response(serializer.data)
+
+
+@api_view(["DELETE"])
+def apiDeleteNote(request, pk):
+    note = Note.objects.get(id=pk)
+    note.delete()
+
+    return Response("Item deleted!")
+
+
 ##############################API##############################
 
 
