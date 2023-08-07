@@ -6,6 +6,7 @@ urlpatterns = [
     path("health-check/", views.healthCheck, name="health-check"),
     path("notes", views.notesView, name="notes"),
     path("notes/<str:pk>", views.notesDetailView, name="notes-details"),
+    path("api-create-note", views.apiCreateNote, name="api-create-note"),
     path("", views.homeView, name="home"),
     path("user-login/", views.loginView, name="user-login"),
     path("user-logout/", views.logoutView, name="user-logout"),

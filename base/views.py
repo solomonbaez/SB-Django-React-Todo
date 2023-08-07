@@ -9,6 +9,7 @@ from .forms import noteForm
 from .serializers import noteSerializer
 
 
+##############################API##############################
 @api_view(["GET"])
 def apiOverview(request):
     api_urls = {
@@ -40,6 +41,19 @@ def notesDetailView(request, pk):
     serialized_note = noteSerializer(note, many=False)
 
     return Response(serialized_note.data)
+
+
+@api_view(["POST"])
+def apiCreateNote(request):
+    serializer = noteSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+
+    return Response(serializer.data)
+
+
+##############################API##############################
 
 
 def homeView(request):
