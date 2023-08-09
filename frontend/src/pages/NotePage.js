@@ -1,11 +1,13 @@
-import React from "react"
+import React from "react";
+import { Routes, Route, useParams } from "react-router-dom";
 
 const NotePage = () => {
-    return (
-        <div>
-            <h1>Test Note</h1>
-        </div>
-    );
+  let params = useParams();
+  return (
+    <div>
+      <h1>Test Note {params.id}</h1>
+    </div>
+  );
 };
 
 export default NotePage;
