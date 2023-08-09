@@ -20,6 +20,14 @@ const NotePage = () => {
     setNote(data);
   };
 
+  const getTitle = (note) => {
+    let title = note.description.split("\n")[0];
+    if (title.length > 50) {
+      title = title.splice(0, 50);
+    }
+    note.title = title;
+  };
+
   const createNote = async () => {
     fetch(`/api/create/`, {
       method: "POST",
@@ -50,6 +58,9 @@ const NotePage = () => {
   };
 
   const handleSubmit = () => {
+    // generate a title
+    getTitle(note);
+
     if (noteId !== "create" && !note.description) {
       deleteNote();
     } else if (noteId !== "create") {
@@ -71,26 +82,21 @@ const NotePage = () => {
             <Arrowleft onClick={handleSubmit} />
           </Link>
         </h3>
-        {noteId !== "create" ? (
-          <h3>
-            <Link to="/">
+        <h3>
+          <Link to="/">
+            {noteId !== "create" ? (
               <button onClick={deleteNote}>delete</button>
-            </Link>
-          </h3>
-        ) : (
-          <h3>
-            <Link to="/">
+            ) : (
               <button onClick={handleSubmit}>create</button>
-            </Link>
-          </h3>
-        )}
+            )}
+          </Link>
+        </h3>
       </div>
       <textarea
         onChange={(e) => {
           setNote({
             ...note,
             description: e.target.value,
-            title: e.target.value,
           });
         }}
         defaultValue={note?.description}
