@@ -13,9 +13,21 @@ const NotePage = () => {
   }, [noteId]);
 
   const getNote = async () => {
+    // prevent network issues on "create"
+    if (noteId === "create") return;
     let response = await fetch(`/api/notes/${noteId}`);
     let data = await response.json();
     setNote(data);
+  };
+
+  const createNote = async () => {
+    fetch(`/api/create/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(note),
+    });
   };
 
   const updateNote = async () => {
@@ -38,7 +50,13 @@ const NotePage = () => {
   };
 
   const handleSubmit = () => {
-    updateNote();
+    if (noteId !== "create" && !note.description) {
+      deleteNote();
+    } else if (noteId !== "create") {
+      updateNote();
+    } else if (noteId === "create") {
+      createNote();
+    }
   };
 
   const handleDelete = () => {
@@ -50,18 +68,30 @@ const NotePage = () => {
       <div className="note-header">
         <h3>
           <Link to="/">
-            <Arrowleft onClick={handleSubmit()} />
+            <Arrowleft onClick={handleSubmit} />
           </Link>
         </h3>
-        <h3>
-          <a onClick={handleDelete} href="">
-            delete
-          </a>
-        </h3>
+        {noteId !== "create" ? (
+          <h3>
+            <Link to="/">
+              <button onClick={deleteNote}>delete</button>
+            </Link>
+          </h3>
+        ) : (
+          <h3>
+            <Link to="/">
+              <button onClick={handleSubmit}>create</button>
+            </Link>
+          </h3>
+        )}
       </div>
       <textarea
         onChange={(e) => {
-          setNote({ ...note, description: e.target.value });
+          setNote({
+            ...note,
+            description: e.target.value,
+            title: e.target.value,
+          });
         }}
         defaultValue={note?.description}
       >

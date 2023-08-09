@@ -45,10 +45,12 @@ def notesDetailView(request, pk):
 
 @api_view(["POST"])
 def apiCreateNote(request):
-    serializer = noteSerializer(data=request.data)
-
-    if serializer.is_valid():
-        serializer.save()
+    data = request.data
+    note = Note.objects.create(
+        title=data["title"],
+        description=data["description"],
+    )
+    serializer = noteSerializer(note, many=False)
 
     return Response(serializer.data)
 

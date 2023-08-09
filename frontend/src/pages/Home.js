@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ListItem from "../components/ListItem";
+import AddButton from "../components/AddButton";
 
 const Home = () => {
   // initialize state
@@ -9,7 +10,7 @@ const Home = () => {
     getNotes();
   }, []);
 
-  let getNotes = async () => {
+  const getNotes = async () => {
     // fetch requires async await
     let response = await fetch("/api/notes");
     let data = await response.json();
@@ -29,6 +30,7 @@ const Home = () => {
             <ListItem key={index} note={note} />
           ))}
         </div>
+        <AddButton />
       </div>
     </div>
   );
