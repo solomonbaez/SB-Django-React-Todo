@@ -29,7 +29,7 @@ def healthCheck(request):
 
 @api_view(["GET"])
 def notesView(request):
-    notes = Note.objects.all()
+    notes = Note.objects.all().order_by("-updated")
     serialized_notes = noteSerializer(notes, many=True)
 
     return Response(serialized_notes.data)
@@ -69,7 +69,7 @@ def apiDeleteNote(request, pk):
     note = Note.objects.get(id=pk)
     note.delete()
 
-    return Response("Item deleted!")
+    return Response("Note deleted!")
 
 
 ##############################API##############################
