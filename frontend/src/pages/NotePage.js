@@ -18,16 +18,37 @@ const NotePage = () => {
     setNote(data);
   };
 
+  const updateNote = async () => {
+    fetch(`/api/notes/${noteId}/update`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(note),
+    });
+  };
+
+  const handleSubmit = () => {
+    updateNote();
+  };
+
   return (
     <div className="note">
       <div className="note-header">
         <h3>
           <Link to="/">
-            <Arrowleft />
+            <Arrowleft onClick={handleSubmit()} />
           </Link>
         </h3>
       </div>
-      <textarea defaultValue={note?.description}>{note?.description}</textarea>
+      <textarea
+        onChange={(e) => {
+          setNote({ ...note, description: e.target.value });
+        }}
+        defaultValue={note?.description}
+      >
+        {note?.description}
+      </textarea>
     </div>
   );
 };

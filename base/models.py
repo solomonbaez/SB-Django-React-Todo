@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Note(models.Model):
     # link to poster, cascade deletion
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, null=True)
     description = models.TextField(max_length=200, null=True, blank=True)
 
