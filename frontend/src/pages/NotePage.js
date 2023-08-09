@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react";
-import { Routes, Route, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const NotePage = () => {
   let noteId = useParams().id;
