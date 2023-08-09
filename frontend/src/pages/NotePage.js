@@ -1,11 +1,24 @@
-import React from "react";
+import { React, useState, useEffect } from "react";
 import { Routes, Route, useParams } from "react-router-dom";
 
 const NotePage = () => {
-  let params = useParams();
+  let noteId = useParams().id;
+  let [note, setNote] = useState(null);
+
+  // inject noteId
+  useEffect(() => {
+    getNote();
+  }, [noteId]);
+
+  const getNote = async () => {
+    let response = await fetch(`/api/notes/${noteId}`);
+    let data = await response.json();
+    setNote(data);
+  };
+
   return (
     <div>
-      <h1>Test Note {params.id}</h1>
+      <p>{note?.description}</p>
     </div>
   );
 };
