@@ -4,6 +4,6 @@ from . import views
 urlpatterns = [
     path("api", views.apiOverview, name="api"),
     path("health-check", views.healthCheck, name="health-check"),
-    path("notes", views.getNotes, name="notes"),
-    path("notes/<str:pk>", views.getNote, name="notes-details"),
+    path("notes", views.GetNotes.as_view(), name="notes"),
+    path("notes/<str:pk>", views.GetNote.as_view(), name="notes-details"),
 ]

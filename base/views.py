@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from rest_framework.views import APIView
 from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -27,13 +28,14 @@ def healthCheck(request):
     return Response(HttpResponse.status_code)
 
 
-@api_view(["GET", "POST"])
-def getNotes(request):
-    if request.method == "GET":
+class GetNotes(APIView):
+    def get(self, request):
         notes = Note.objects.all().order_by("-updated")
         serializer = noteSerializer(notes, many=True)
 
-    elif request.method == "POST":
+        return Response(serializer.data)
+
+    def post(self, request):
         data = request.data
         note = Note.objects.create(
             title=data["title"],
@@ -41,24 +43,30 @@ def getNotes(request):
         )
         serializer = noteSerializer(note, many=False)
 
-    return Response(serializer.data)
+        return Response(serializer.data)
 
 
-@api_view(["GET", "PUT", "DELETE"])
-def getNote(request, pk):
-    note = Note.objects.get(id=pk)
-
-    if request.method == "GET":
+class GetNote(APIView):
+    def get(self, request, pk):
+        note = Note.objects.get(id=pk)
         serializer = noteSerializer(note, many=False)
 
-    elif request.method == "PUT":
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        note = Note.objects.get(id=pk)
         serializer = noteSerializer(instance=note, data=request.data)
 
-    elif request.method == "DELETE":
-        note.delete()
-        return Response("Note Deleted!")
+        if serializer.is_valid():
+            serializer.save()
 
-    return Response(serializer.data)
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
+        note = Note.objects.get(id=pk)
+        note.delete()
+
+        return Response("Note Deleted!")
 
 
 #############################API##############################
