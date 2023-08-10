@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
 import Home from "./pages/Home";
@@ -6,7 +6,7 @@ import NotePage from "./pages/NotePage";
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="container dark">
         <div className="app">
           <Header />
@@ -16,7 +16,7 @@ function App() {
           </Routes>
         </div>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

@@ -27,51 +27,38 @@ def healthCheck(request):
     return Response(HttpResponse.status_code)
 
 
-@api_view(["GET"])
-def notesView(request):
-    notes = Note.objects.all().order_by("-updated")
-    serialized_notes = noteSerializer(notes, many=True)
+@api_view(["GET", "POST"])
+def getNotes(request):
+    if request.method == "GET":
+        notes = Note.objects.all().order_by("-updated")
+        serializer = noteSerializer(notes, many=True)
 
-    return Response(serialized_notes.data)
-
-
-@api_view(["GET"])
-def notesDetailView(request, pk):
-    note = Note.objects.get(id=pk)
-    serialized_note = noteSerializer(note, many=False)
-
-    return Response(serialized_note.data)
-
-
-@api_view(["POST"])
-def apiCreateNote(request):
-    data = request.data
-    note = Note.objects.create(
-        title=data["title"],
-        description=data["description"],
-    )
-    serializer = noteSerializer(note, many=False)
+    elif request.method == "POST":
+        data = request.data
+        note = Note.objects.create(
+            title=data["title"],
+            description=data["description"],
+        )
+        serializer = noteSerializer(note, many=False)
 
     return Response(serializer.data)
 
 
-@api_view(["PUT"])
-def apiUpdateNote(request, pk):
+@api_view(["GET", "PUT", "DELETE"])
+def getNote(request, pk):
     note = Note.objects.get(id=pk)
-    serializer = noteSerializer(instance=note, data=request.data)
 
-    if serializer.is_valid():
-        serializer.save()
+    if request.method == "GET":
+        serializer = noteSerializer(note, many=False)
+
+    elif request.method == "PUT":
+        serializer = noteSerializer(instance=note, data=request.data)
+
+    elif request.method == "DELETE":
+        note.delete()
+        return Response("Note Deleted!")
 
     return Response(serializer.data)
 
 
-@api_view(["DELETE"])
-def apiDeleteNote(request, pk):
-    note = Note.objects.get(id=pk)
-    note.delete()
-
-    return Response("Note deleted!")
-
-
-##############################API##############################
+#############################API##############################

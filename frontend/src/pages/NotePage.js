@@ -3,14 +3,16 @@ import { useParams, Link } from "react-router-dom";
 // import svg as react component
 import { ReactComponent as Arrowleft } from "../assets/arrow-left.svg";
 
+const getCookie = (cookie) => {
+  const value = `; ${document.cookie}`;
+  const sections = value.split(`; ${cookie}`);
+  if (sections.length === 2) return sections.pop().split(";").shift();
+};
+
 const NotePage = () => {
   let noteId = useParams().id;
   let [note, setNote] = useState(null);
-
-  // inject noteId
-  useEffect(() => {
-    getNote();
-  }, [noteId]);
+  let csrfToken = getCookie("csrftoken");
 
   const getNote = async () => {
     // prevent network issues on "create"
@@ -29,30 +31,33 @@ const NotePage = () => {
   };
 
   const createNote = async () => {
-    fetch(`/api/create/`, {
+    fetch(`/api/notes`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken,
       },
       body: JSON.stringify(note),
     });
   };
 
   const updateNote = async () => {
-    fetch(`/api/notes/${noteId}/update`, {
+    fetch(`/api/notes/${noteId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken,
       },
       body: JSON.stringify(note),
     });
   };
 
   const deleteNote = async () => {
-    fetch(`/api/notes/${noteId}/delete`, {
+    fetch(`/api/notes/${noteId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken,
       },
     });
   };
@@ -70,9 +75,10 @@ const NotePage = () => {
     }
   };
 
-  const handleDelete = () => {
-    deleteNote();
-  };
+  // inject noteId
+  useEffect(() => {
+    getNote();
+  }, [noteId]);
 
   return (
     <div className="note">
